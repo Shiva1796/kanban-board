@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { FiPlus, FiTrash } from "react-icons/fi";
+import { FiPlus } from "react-icons/fi";
 import { motion } from "framer-motion";
 import BurnBarrel from "../ui/BurnBarrel";
 import Card from "../ui/Card";
