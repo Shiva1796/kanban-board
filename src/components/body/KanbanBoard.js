@@ -1,17 +1,16 @@
 import React, { useState } from "react";
 import { FiPlus, FiTrash } from "react-icons/fi";
 import { motion } from "framer-motion";
-import { FaFire } from "react-icons/fa";
 import BurnBarrel from "../ui/BurnBarrel";
 import Card from "../ui/Card";
 import DropIndicator from "../ui/DropIndicator";
-import { useCards } from "../context/CardContext"; // Assuming you have this in place
+import { useCards } from "../context/CardContext";
 
 const KanbanBoard = () => {
-  const { cards, setCards } = useCards(); // Using context for cards management
+  const { cards, setCards } = useCards();
 
   return (
-    <div className="flex h-full w-full gap-3 overflow-scroll p-12 ">
+    <div className="flex w-full h-full gap-3 overflow-scroll p-12 ">
       <Column
         title="Backlog"
         column="backlog"
