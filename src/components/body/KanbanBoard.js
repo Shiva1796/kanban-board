@@ -9,7 +9,7 @@ import { useCards } from "../context/CardContext";
 const KanbanBoard = () => {
   const { cards, updateCard } = useCards();
   return (
-    <div className="flex w-full h-full gap-3">
+    <div className="flex flex-col lg:flex-row w-full h-full gap-3 overflow-auto p-2 lg:p-4">
       <Column
         title="Backlog"
         column="backlog"
@@ -117,7 +117,7 @@ const Column = ({ title, headingColor, column }) => {
   const filteredCards = cards.filter((c) => c.column === column);
 
   return (
-    <div className="w-56 shrink-0">
+    <div className="w-full lg:w-56 flex-shrink-0">
       <div className="mb-3 flex items-center justify-between">
         <h3 className={`font-medium ${headingColor}`}>{title}</h3>
         <span className="rounded text-sm text-neutral-400">
@@ -128,7 +128,7 @@ const Column = ({ title, headingColor, column }) => {
         onDrop={handleDragEnd}
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
-        className={`h-full w-full transition-colors ${
+        className={`h-full w-full transition-colors overflow-y-auto p-2 rounded-lg ${
           active ? "bg-neutral-800/50" : "bg-neutral-800/0"
         }`}
       >

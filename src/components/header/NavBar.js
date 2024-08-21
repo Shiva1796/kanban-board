@@ -30,53 +30,47 @@ const Navbar = () => {
         <span className="text-2xl font-bold">Kanban</span>
       </motion.a>
       <div className="flex items-center">
-        <div className="dropdown lg:hidden">
-          <div
-            tabIndex={0}
-            role="button"
-            className="btn btn-ghost"
-            onClick={() => setActive(!active)}
-          >
-            <MenuIcon className="h-5 w-5" />
-          </div>
+        <div className="lg:hidden">
+          <button className="btn btn-ghost" onClick={() => setActive(!active)}>
+            <MenuIcon className="h-6 w-6" />
+          </button>
           <AnimatePresence>
             {active && (
-              <motion.ul
+              <motion.div
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
-                className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52 absolute"
+                className="absolute top-[8vh] right-0 mt-2 w-[80vw] bg-black bg-opacity-90 rounded-lg shadow-lg z-20"
               >
-                <li>
-                  <Link to="/" className="flex flex-col items-center">
-                    <HomeIcon className="mb-2" /> Home
-                  </Link>
-                </li>
-                {user && (
+                <ul className="menu p-4 flex flex-col gap-4">
                   <li>
-                    <Link
-                      to="/dashboard"
-                      className="flex flex-col items-center"
-                    >
-                      <DashboardIcon className="mb-2" /> Dashboard
+                    <Link to="/" className="flex items-center gap-2">
+                      <HomeIcon className="mb-1" /> Home
                     </Link>
                   </li>
-                )}
-                <li>
-                  {user ? (
-                    <button
-                      onClick={logout}
-                      className="flex flex-col items-center"
-                    >
-                      <LogoutIcon className="mb-2" /> Logout
-                    </button>
-                  ) : (
-                    <Link to="/login" className="flex flex-col items-center">
-                      <LoginIcon className="mb-2" /> Login
-                    </Link>
+                  {user && (
+                    <li>
+                      <Link to="/dashboard" className="flex items-center gap-2">
+                        <DashboardIcon className="mb-1" /> Dashboard
+                      </Link>
+                    </li>
                   )}
-                </li>
-              </motion.ul>
+                  <li>
+                    {user ? (
+                      <button
+                        onClick={logout}
+                        className="flex items-center gap-2"
+                      >
+                        <LogoutIcon className="mb-1" /> Logout
+                      </button>
+                    ) : (
+                      <Link to="/login" className="flex items-center gap-2">
+                        <LoginIcon className="mb-1" /> Login
+                      </Link>
+                    )}
+                  </li>
+                </ul>
+              </motion.div>
             )}
           </AnimatePresence>
         </div>
