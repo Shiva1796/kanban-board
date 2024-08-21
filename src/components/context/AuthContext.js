@@ -1,8 +1,10 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
+import { db } from "../../firebase.config";
+import { doc, writeBatch } from "firebase/firestore";
 import {
   onAuthStateChanged,
   signInWithEmailAndPassword,
-  createUserWithEmailAndPassword, // Added for signUp
+  createUserWithEmailAndPassword,
   signOut,
   GoogleAuthProvider,
   signInWithPopup,
@@ -29,22 +31,60 @@ export const AuthProvider = ({ children }) => {
     return signInWithEmailAndPassword(auth, email, password);
   };
 
-  const signUp = (email, password) => {
-    return createUserWithEmailAndPassword(auth, email, password);
+  const signUp = async (email, password) => {
+    const userCredential = await createUserWithEmailAndPassword(
+      auth,
+      email,
+      password
+    );
+    const userId = userCredential.user.uid;
+
+    // Initialize Kanban board for the new user
+    await initializeKanbanBoard(userId);
+
+    return userCredential;
   };
 
-  const loginWithGoogle = () => {
+  const loginWithGoogle = async () => {
     const provider = new GoogleAuthProvider();
-    return signInWithPopup(auth, provider);
+    const userCredential = await signInWithPopup(auth, provider);
+    const userId = userCredential.user.uid;
+
+    // Initialize Kanban board if this is the first login
+    if (userCredential.additionalUserInfo.isNewUser) {
+      await initializeKanbanBoard(userId);
+    }
+
+    return userCredential;
   };
 
   const logout = () => {
     return signOut(auth);
   };
 
+  const initializeKanbanBoard = async (userId) => {
+    try {
+      const collections = ["backlog", "todo", "in-progress", "complete"];
+      const batch = writeBatch(db);
+      collections.forEach((collectionName) => {
+        const docRef = doc(db, "users", userId, collectionName, "dummyDoc");
+        batch.set(docRef, {});
+      });
+      await batch.commit();
+    } catch (error) {
+      console.error("Error initializing Kanban board: ", error);
+    }
+  };
+
   return (
     <AuthContext.Provider
-      value={{ user, login, signUp, loginWithGoogle, logout }}
+      value={{
+        user,
+        login,
+        signUp,
+        loginWithGoogle,
+        logout,
+      }}
     >
       {!loading && children}
     </AuthContext.Provider>

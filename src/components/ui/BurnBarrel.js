@@ -4,7 +4,7 @@ import { FaFire } from "react-icons/fa";
 import { useCards } from "../context/CardContext";
 
 const BurnBarrel = () => {
-  const { setCards } = useCards();
+  const { deleteCard } = useCards(); // Access deleteCard from context
   const [active, setActive] = useState(false);
 
   const handleDragOver = (e) => {
@@ -12,21 +12,20 @@ const BurnBarrel = () => {
     setActive(true);
   };
 
-  const handleDragLeave = () => {
+  const handleDrop = (e) => {
+    e.preventDefault();
+    const cardId = e.dataTransfer.getData("cardId");
+    deleteCard(cardId); // Delete the card from Firebase and update local state in CardContext
     setActive(false);
   };
 
-  const handleDragEnd = (e) => {
-    const cardId = e.dataTransfer.getData("cardId");
-
-    setCards((prev) => prev.filter((c) => c.id !== cardId));
-
+  const handleDragLeave = () => {
     setActive(false);
   };
 
   return (
     <div
-      onDrop={handleDragEnd}
+      onDrop={handleDrop}
       onDragOver={handleDragOver}
       onDragLeave={handleDragLeave}
       className={`mt-10 grid h-56 w-56 shrink-0 place-content-center rounded border text-3xl ${

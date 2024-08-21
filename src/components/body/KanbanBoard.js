@@ -7,10 +7,9 @@ import DropIndicator from "../ui/DropIndicator";
 import { useCards } from "../context/CardContext";
 
 const KanbanBoard = () => {
-  const { cards, setCards } = useCards();
-
+  const { cards, updateCard } = useCards(); // We use updateCard to modify cards
   return (
-    <div className="flex w-full h-full gap-3 overflow-scroll p-12 ">
+    <div className="flex w-full h-full gap-3">
       <Column
         title="Backlog"
         column="backlog"
@@ -25,7 +24,7 @@ const KanbanBoard = () => {
 };
 
 const Column = ({ title, headingColor, column }) => {
-  const { cards, setCards } = useCards();
+  const { cards, updateCard } = useCards(); // Make sure to access the correct context functions
   const [active, setActive] = useState(false);
 
   const handleDragStart = (e, card) => {
@@ -34,7 +33,6 @@ const Column = ({ title, headingColor, column }) => {
 
   const handleDragEnd = (e) => {
     const cardId = e.dataTransfer.getData("cardId");
-
     setActive(false);
     clearHighlights();
 
@@ -48,29 +46,28 @@ const Column = ({ title, headingColor, column }) => {
 
       let cardToTransfer = copy.find((c) => c.id === cardId);
       if (!cardToTransfer) return;
-      cardToTransfer = { ...cardToTransfer, column };
+      const updatedCard = { ...cardToTransfer, column };
 
       copy = copy.filter((c) => c.id !== cardId);
 
       const moveToBack = before === "-1";
 
       if (moveToBack) {
-        copy.push(cardToTransfer);
+        copy.push(updatedCard);
       } else {
         const insertAtIndex = copy.findIndex((el) => el.id === before);
         if (insertAtIndex === undefined) return;
 
-        copy.splice(insertAtIndex, 0, cardToTransfer);
+        copy.splice(insertAtIndex, 0, updatedCard);
       }
 
-      setCards(copy);
+      updateCard(cardId, { column }); // Update the card's column in Firebase
     }
   };
 
   const handleDragOver = (e) => {
     e.preventDefault();
     highlightIndicator(e);
-
     setActive(true);
   };
 
@@ -81,7 +78,6 @@ const Column = ({ title, headingColor, column }) => {
 
   const clearHighlights = (els) => {
     const indicators = els || getIndicators();
-
     indicators.forEach((i) => {
       i.style.opacity = "0";
     });
@@ -89,23 +85,17 @@ const Column = ({ title, headingColor, column }) => {
 
   const highlightIndicator = (e) => {
     const indicators = getIndicators();
-
     clearHighlights(indicators);
-
     const el = getNearestIndicator(e, indicators);
-
     el.element.style.opacity = "1";
   };
 
   const getNearestIndicator = (e, indicators) => {
     const DISTANCE_OFFSET = 50;
-
     const el = indicators.reduce(
       (closest, child) => {
         const box = child.getBoundingClientRect();
-
         const offset = e.clientY - (box.top + DISTANCE_OFFSET);
-
         if (offset < 0 && offset > closest.offset) {
           return { offset: offset, element: child };
         } else {
@@ -117,7 +107,6 @@ const Column = ({ title, headingColor, column }) => {
         element: indicators[indicators.length - 1],
       }
     );
-
     return el;
   };
 
@@ -158,19 +147,17 @@ const AddCard = ({ column }) => {
   const [text, setText] = useState("");
   const [adding, setAdding] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-
     if (!text.trim().length) return;
 
     const newCard = {
       column,
       title: text.trim(),
-      id: Math.random().toString(),
     };
 
-    saveCard(newCard);
-
+    // Save the card in Firestore and use the Firestore-generated ID
+    await saveCard(newCard);
     setAdding(false);
   };
 

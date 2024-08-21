@@ -30,7 +30,7 @@ const LoginPage = () => {
   const handleGoogleSignIn = async () => {
     try {
       await loginWithGoogle();
-      navigate("/");
+      navigate("/dashboard");
     } catch (err) {
       setError("Failed to sign in with Google");
     }
