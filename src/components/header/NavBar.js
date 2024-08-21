@@ -14,7 +14,7 @@ const Navbar = () => {
   const [active, setActive] = useState(false);
 
   return (
-    <nav className="bg-background flex items-center justify-between bg-opacity-20 absolute text-white border z-10 w-[90vw] font-Josefin mt-2 rounded-2xl shadow-lg p-4">
+    <nav className="bg-background h-[8vh] flex items-center justify-between bg-opacity-20 absolute text-white border z-10 w-[90vw] font-Josefin mt-2 rounded-2xl shadow-lg p-4">
       <motion.a
         initial={{ opacity: 0, y: -12 }}
         animate={{
@@ -124,16 +124,10 @@ const NavLink = ({ to, label, icon }) => {
   return (
     <Link
       to={to}
-      className="relative flex items-center gap-1 text-white text-lg hover:text-primary duration-150"
+      className="relative flex items-center gap-1 text-white text-lg transition-transform duration-300 ease-in-out transform hover:scale-105 hover:text-yellow-400"
     >
       {icon}
       {label}
-      <span
-        style={{
-          transform: "scaleX(1)",
-        }}
-        className="absolute -bottom-0 left-0 right-0 h-1 origin-left scale-x-0 rounded-full bg-primary transition-transform duration-300 ease-out"
-      />
     </Link>
   );
 };
