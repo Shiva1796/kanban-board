@@ -10,10 +10,12 @@ import {
   animate,
 } from "framer-motion";
 import { Link } from "react-router-dom";
+import { useAuth } from "../context/AuthContext"; // Import useAuth to check user authentication
 
 const COLORS_TOP = ["#13FFAA", "#1E67C6", "#CE84CF", "#DD335C"];
 
 const HeroSection = () => {
+  const { user } = useAuth(); // Get the authenticated user from the AuthContext
   const color = useMotionValue(COLORS_TOP[0]);
 
   useEffect(() => {
@@ -100,10 +102,11 @@ const HeroSection = () => {
           whileTap={{
             scale: 0.985,
           }}
-          className="group text-xl border-2 relative font-Josefin flex bg-primary-content bg-opacity-50 w-fit items-center gap-1.5 rounded-xl bg-gray-950/10 px-4 py-2 text-gray-50 transition-colors  hover:bg-primary-content duration-300"
+          className="group text-xl border-2 relative font-Josefin flex bg-primary-content bg-opacity-50 w-fit items-center gap-1.5 rounded-xl bg-gray-950/10 px-4 py-2 text-gray-50 transition-colors hover:bg-primary-content duration-300"
         >
-          <Link to="/login">Sign Up</Link>
-
+          <Link to={user ? "/dashboard" : "/login"}>
+            {user ? "Dashboard" : "Sign Up"}
+          </Link>
           <FiArrowRight className="transition-transform group-hover:-rotate-45 group-active:-rotate-12" />
         </motion.button>
       </div>
