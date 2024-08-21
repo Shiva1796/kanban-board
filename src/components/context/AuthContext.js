@@ -46,16 +46,27 @@ export const AuthProvider = ({ children }) => {
   };
 
   const loginWithGoogle = async () => {
-    const provider = new GoogleAuthProvider();
-    const userCredential = await signInWithPopup(auth, provider);
-    const userId = userCredential.user.uid;
+    try {
+      const provider = new GoogleAuthProvider();
+      const userCredential = await signInWithPopup(auth, provider);
 
-    // Initialize Kanban board if this is the first login
-    if (userCredential.additionalUserInfo.isNewUser) {
-      await initializeKanbanBoard(userId);
+      if (userCredential && userCredential.user) {
+        const userId = userCredential.user.uid;
+
+        const isNewUser = userCredential.additionalUserInfo?.isNewUser || false;
+
+        if (isNewUser) {
+          await initializeKanbanBoard(userId);
+        }
+
+        return userCredential;
+      } else {
+        throw new Error("Failed to get user credentials from Google Sign-In.");
+      }
+    } catch (err) {
+      console.error("Google Sign-In Error:", err);
+      throw err;
     }
-
-    return userCredential;
   };
 
   const logout = () => {

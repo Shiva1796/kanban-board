@@ -9,7 +9,7 @@ const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isSignUp, setIsSignUp] = useState(false);
-  const { login, signUp, loginWithGoogle } = useAuth(); // Fixed import
+  const { login, signUp, loginWithGoogle } = useAuth();
   const navigate = useNavigate();
   const [error, setError] = useState("");
 

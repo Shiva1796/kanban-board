@@ -4,7 +4,7 @@ import { FaFire } from "react-icons/fa";
 import { useCards } from "../context/CardContext";
 
 const BurnBarrel = () => {
-  const { deleteCard } = useCards(); // Access deleteCard from context
+  const { deleteCard } = useCards();
   const [active, setActive] = useState(false);
 
   const handleDragOver = (e) => {
@@ -15,7 +15,7 @@ const BurnBarrel = () => {
   const handleDrop = (e) => {
     e.preventDefault();
     const cardId = e.dataTransfer.getData("cardId");
-    deleteCard(cardId); // Delete the card from Firebase and update local state in CardContext
+    deleteCard(cardId);
     setActive(false);
   };
 

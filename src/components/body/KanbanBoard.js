@@ -7,7 +7,7 @@ import DropIndicator from "../ui/DropIndicator";
 import { useCards } from "../context/CardContext";
 
 const KanbanBoard = () => {
-  const { cards, updateCard } = useCards(); // We use updateCard to modify cards
+  const { cards, updateCard } = useCards();
   return (
     <div className="flex w-full h-full gap-3">
       <Column
@@ -24,7 +24,7 @@ const KanbanBoard = () => {
 };
 
 const Column = ({ title, headingColor, column }) => {
-  const { cards, updateCard } = useCards(); // Make sure to access the correct context functions
+  const { cards, updateCard } = useCards();
   const [active, setActive] = useState(false);
 
   const handleDragStart = (e, card) => {
@@ -61,7 +61,7 @@ const Column = ({ title, headingColor, column }) => {
         copy.splice(insertAtIndex, 0, updatedCard);
       }
 
-      updateCard(cardId, { column }); // Update the card's column in Firebase
+      updateCard(cardId, { column });
     }
   };
 
@@ -156,7 +156,6 @@ const AddCard = ({ column }) => {
       title: text.trim(),
     };
 
-    // Save the card in Firestore and use the Firestore-generated ID
     await saveCard(newCard);
     setAdding(false);
   };
